@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Object Detection</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></script>
+
+    <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+</head>
+<body>
+    <style>
+        .heading{
+            font-size: 23px;
+            width: 100%;
+            margin: 0px;
+        }
+        #status{
+            font-size: 18px;
+        }
+        .copy_right_footer{
+            color: white;
+            background-color: grey;
+            width: 100%;
+            bottom: 0;
+            position: fixed;
+            text-align: center;
+            line-height: 3;
+        }
+        .btn-success{
+            font-size: larger;
+        }
+        canvas{
+            border-radius: 13px;
+            margin-top: 120px;
+        }
+        button{
+            background-color: black;
+            border-radius: 5px;
+            border-color: transparent;
+            font-size: 20px;
+            color: white;
+            margin-left: 96%;
+            margin-top: 15px;
+        }
+    </style>
+    <script>
+        img = "";
+        status = "";
+        bed = "";
+        
+        function preload() {
+            img = loadImage("bed.jpg");
+        }
+
+        function setup() {
+            canvas = createCanvas(640, 420);
+            canvas.center();
+            objectDetector = ml5.objectDetector('cocossd', modelLoaded);
+            document.getElementById("status").innerHTML = "Status : Detecting Object";
+        }
+
+        function draw() {
+            image(img, 0, 0, 640, 420);
+            fill("#FF0000");
+            text(bed, 30, 35);
+            noFill();
+            stroke("#FF0000");
+            rect(15, 15, 600, 400);
+        }
+
+        function modelLoaded() {
+            console.log("Model Loaded!");
+            status = true;
+            objectDetector.detect(img, gotresult);
+        }
+
+        function gotresult(error, results) {
+            if (error) {
+                console.log(error);
+            }
+            console.log(results);
+            bed = "Bed : " + Math.floor(results[0].confidence*100) + "%";
+        }
+    </script>
+    <center>
+        <h3 class="btn btn-info heading">Object Detection</h3>
+    </center>
+        <a href="index.html"><button>Back</button></a>
+    <center>
+        <h3 id="status" class="btn btn-danger"></h3><br><br>
+        <h4 class="btn btn-success">We are using cocossd for object detection</h4>
+    </center>
+    <div class="copy_right_footer">Developed by - Sukhmanjeet Singh</div>
+</body>
+</html>
